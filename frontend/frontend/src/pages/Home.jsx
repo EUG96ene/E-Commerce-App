@@ -3,11 +3,13 @@ import axios from "axios";
 
 export default function StudentsByNationality() {
   const [studentsByNationality, setStudentsByNationality] = useState([]);
+  const [selectedNationality, setSelectedNationality] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios.get("http://localhost:3000/students");
       setStudentsByNationality(result.data);
+      setSelectedNationality(result.data[0]?.nationality ?? "");
     };
     fetchData();
   }, []);
@@ -26,21 +28,37 @@ export default function StudentsByNationality() {
     }, {})
   ).sort((a, b) => a.nationality.localeCompare(b.nationality));
 
+  const handleSelectChange = (event) => {
+    setSelectedNationality(event.target.value);
+  };
+
   return (
     <div>
-      <h1>Students by Nationality</h1>
-      {nationalities.map((group) => (
-        <div key={group.nationality}>
-          <h3>{group.nationality}</h3>
-          <ul>
-            {group.students.map((student) => (
-              <li key={student.id}>
+      <h3>Students by Nationality</h3>
+      <label htmlFor="nationality">Select nationality:</label>
+      <select id="nationality" onChange={handleSelectChange} value={selectedNationality}>
+        {nationalities.map((nationality) => (
+          <option key={nationality.nationality} value={nationality.nationality}>
+            {nationality.nationality}
+          </option>
+        ))}
+      </select>
+      {studentsByNationality
+        .filter(
+          (student) =>
+            selectedNationality === "" ||
+            student.nationality === selectedNationality
+        )
+        .map((student) => (
+          <div key={student.id}>
+            <h3>{student.nationality}</h3>
+            <ul>
+              <li>
                 {student.firstName} {student.lastName} (Age {student.age})
               </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+            </ul>
+          </div>
+        ))}
     </div>
   );
 }
