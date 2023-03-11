@@ -1,7 +1,7 @@
 const path = require( 'path');
 const logger = require( 'morgan')
 const express =require( 'express');
-const routes = require('./src/routes/index.js')
+const routes = require('./src/routes/index')
 const cors = require('cors');
 
 const app = express();

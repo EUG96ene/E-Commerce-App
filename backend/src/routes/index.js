@@ -1,12 +1,8 @@
 const { Router } = require("express");
+const {createStudent} = require('../controllers/index')
+const routes = Router();
 
-const router = Router();
+// routes.get("/students", getStudents)
+routes.post("/init",createStudent)
 
-router.get("/students", (req, res) => {
-	res.send({ success: true });
-});
-router.post("/init", (req, res) => {
-	res.send({ success: true });
-});
-
-module.exports = router;
+module.exports = routes;
