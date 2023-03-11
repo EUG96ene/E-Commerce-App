@@ -14,13 +14,14 @@ exports.createStudent = async(req, res) => {
 			res.status(500).json(error);
     }
 
-    exports.getStudents = async(req,res) => {
-		try {
-			const students = await Student.find({}).sort("nationality");
-			res.status(200).json(students);
-		} catch (err) {
-			console.log(err);
-			res.status(500).json(err);
-		}
-	}
+   
+}
+exports.getStudents = async(req,res) => {
+    try {
+        const allStudents = await Student.find({}).sort("nationality");
+        res.status(200).json(allStudents);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
 }
