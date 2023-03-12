@@ -1,0 +1,41 @@
+/* Style the form container */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Style the input fields */
+.form-container input {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+/* Style the input fields when hovered */
+.form-container input:hover {
+  background-color: #ddd;
+}
+
+/* Style the submit button */
+.form-container button {
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+  width: 100%;
+}
+
+/* Style the submit button when disabled */
+.form-container button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./styles.css";
 
 export default function StudentsByNationality() {
   const [studentsByNationality, setStudentsByNationality] = useState([]);
   const [selectedNationality, setSelectedNationality] = useState("");
+  const [sortedStudents, setSortedStudents] = useState([]);
+  const [sortOrder, setSortOrder] = useState("asc");
 
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios.get("http://localhost:3000/students");
       setStudentsByNationality(result.data);
-      setSelectedNationality(result.data[0]?.nationality ?? "");
     };
     fetchData();
   }, []);
@@ -19,7 +21,7 @@ export default function StudentsByNationality() {
       if (!acc[student.nationality]) {
         acc[student.nationality] = {
           nationality: student.nationality,
-          students: [student],
+          students: [student]
         };
       } else {
         acc[student.nationality].students.push(student);
@@ -30,35 +32,57 @@ export default function StudentsByNationality() {
 
   const handleSelectChange = (event) => {
     setSelectedNationality(event.target.value);
+    setSortedStudents(
+      studentsByNationality
+        .filter((student) => student.nationality === event.target.value)
+        .sort((a, b) => a.firstName.localeCompare(b.firstName))
+    );
+  };
+
+  const handleSort = () => {
+    const sorted = [...sortedStudents].sort((a, b) =>
+      sortOrder === "asc"
+        ? a.firstName.localeCompare(b.firstName)
+        : b.firstName.localeCompare(a.firstName)
+    );
+    setSortedStudents(sorted);
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
 
   return (
-    <div>
-      <h3>Students by Nationality</h3>
-      <label htmlFor="nationality">Select nationality:</label>
-      <select id="nationality" onChange={handleSelectChange} value={selectedNationality}>
-        {nationalities.map((nationality) => (
-          <option key={nationality.nationality} value={nationality.nationality}>
-            {nationality.nationality}
-          </option>
-        ))}
-      </select>
-      {studentsByNationality
-        .filter(
-          (student) =>
-            selectedNationality === "" ||
-            student.nationality === selectedNationality
-        )
-        .map((student) => (
-          <div key={student.id}>
-            <h3>{student.nationality}</h3>
-            <ul>
-              <li>
-                {student.firstName} {student.lastName} (Age {student.age})
-              </li>
-            </ul>
-          </div>
-        ))}
+    <div className="container">
+      <div className="form-container">
+        <select
+          id="nationality"
+          className="nationality-select"
+          onChange={handleSelectChange}
+          value={selectedNationality}
+        >
+          {nationalities.map((nationality) => (
+            <option
+              key={nationality.nationality}
+              value={nationality.nationality}
+            >
+              {nationality.nationality}
+            </option>
+          ))}
+        </select>
+        <div className="student-selected-container">
+          {selectedNationality &&
+            sortedStudents.map((student) => (
+              <div className="student-container" key={student.id}>
+                <h3>{student.nationality}</h3>
+                <ul>
+                  <li>
+                    {student.firstName} {student.lastName} (Age {student.age})
+                  </li>
+                </ul>
+              </div>
+            ))}
+        </div>
+        <button onClick={handleSort}>Sort</button>
+
+      </div>
     </div>
   );
-}
+            }
